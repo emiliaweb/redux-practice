@@ -1,5 +1,13 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-const HeroesListItem = ({name, description, element}) => {
+import { heroesFetching, heroesFetched, heroesFetchingError, heroesDeleted } from '../../actions';
+import { useHttp } from "../../hooks/http.hook";
+
+const HeroesListItem = ({name, description, element, id}) => {
+    const {heroes} = useSelector(state => state);
+    const dispatch = useDispatch();
+    const {request} = useHttp();
 
     let elementClassName;
 
@@ -20,20 +28,40 @@ const HeroesListItem = ({name, description, element}) => {
             elementClassName = 'bg-warning bg-gradient';
     }
 
+    const getHeroes = () => {
+        dispatch(heroesFetching());
+        request("http://localhost:3001/heroes")
+            .then(data => dispatch(heroesFetched(data)))
+            .catch(() => dispatch(heroesFetchingError()));
+    }
+
+    const onDelete = (id) => {
+        const newHeroes = heroes.filter((hero) => hero.id !== id);
+        dispatch(heroesDeleted(newHeroes));
+        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
+            .then(() => {
+                getHeroes();
+            });
+    }
+
     return (
         <li 
             className={`card flex-row mb-4 shadow-lg text-white ${elementClassName}`}>
             <img src="http://www.stpaulsteinbach.org/wp-content/uploads/2014/09/unknown-hero.jpg" 
-                 className="img-fluid w-25 d-inline" 
-                 alt="unknown hero" 
-                 style={{'objectFit': 'cover'}}/>
+                className="img-fluid w-25 d-inline" 
+                alt="unknown hero" 
+                style={{'objectFit': 'cover'}}/>
             <div className="card-body">
                 
                 <h3 className="card-title">{name}</h3>
                 <p className="card-text">{description}</p>
             </div>
             <span className="position-absolute top-0 start-100 translate-middle badge border rounded-pill bg-light">
-                <button type="button" className="btn-close btn-close" aria-label="Close"></button>
+                <button 
+                    onClick={e => onDelete(id)}
+                    type="button" 
+                    className="btn-close btn-close" 
+                    aria-label="Close"></button>
             </span>
         </li>
     )

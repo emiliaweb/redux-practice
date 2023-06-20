@@ -20,7 +20,7 @@ const HeroesList = () => {
         dispatch(heroesFetching());
         request("http://localhost:3001/heroes")
             .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()))
+            .catch(() => dispatch(heroesFetchingError()));
     }, []);
 
     if (heroesLoadingStatus === "loading") {
@@ -35,7 +35,7 @@ const HeroesList = () => {
         }
 
         return arr.map(({id, ...props}) => {
-            return <HeroesListItem key={id} {...props}/>
+            return <HeroesListItem key={id} id={id} {...props}/>
         })
     }
 

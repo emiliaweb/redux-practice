@@ -1,29 +1,41 @@
 {
-    "heroes": [
-        {
-            "id": 1,
-            "name": "Первый герой",
-            "description": "Первый герой в рейтинге!",
-            "element": "fire"
-        },
-        {
-            "id": 2,
-            "name": "Неизвестный герой",
-            "description": "Скрывающийся в тени",
-            "element": "wind"
-        },
-        {
-            "id": 3,
-            "name": "Морской герой",
-            "description": "Как аквамен, но не из DC",
-            "element": "water"
-        }
-    ],
-    "filters": [
-        "all",
-        "fire",
-        "water",
-        "wind",
-        "earth"
-    ]
+  "heroes": [
+    {
+      "id": 2,
+      "name": "Second hero",
+      "description": "Earth powers",
+      "element": "earth"
+    },
+    {
+      "name": "Emilia",
+      "description": "A lot of things",
+      "element": "fire",
+      "id": 4
+    },
+    {
+      "name": "Water",
+      "description": "Nothing useful",
+      "element": "water",
+      "id": 5
+    },
+    {
+      "name": "Wind",
+      "description": "Nothing useful either",
+      "element": "wind",
+      "id": "f21667"
+    },
+    {
+      "name": "Hello",
+      "description": "Hello World",
+      "element": "water",
+      "id": "3f80e0"
+    }
+  ],
+  "filters": {
+    "all": "Все",
+    "fire": "Огонь",
+    "water": "Вода",
+    "wind": "Ветер",
+    "earth": "Земля"
+  }
 }
