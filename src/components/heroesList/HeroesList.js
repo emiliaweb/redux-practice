@@ -34,10 +34,9 @@ const HeroesList = () => {
     }
 
     const onDelete = useCallback((id) => {
-        const newHeroes = heroes.filter((hero) => hero.id !== id);
         request(`http://localhost:3001/heroes/${id}`, 'DELETE')
             .then(() => {
-                dispatch(heroesDeleted(newHeroes));
+                dispatch(heroesDeleted(id));
             })
             .then(() => {
                 getHeroes();
