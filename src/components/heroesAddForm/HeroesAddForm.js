@@ -1,8 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { heroesPosted, heroesFetched, heroesFetching, heroesFetchingError } from "../../actions";
 import { useHttp } from "../../hooks/http.hook";
@@ -29,21 +29,21 @@ const validationSchema = Yup.object({
 })
 
 const HeroesAddForm = () => {
-    const [filters, setFilters] = useState({});
+    const filters = useSelector(state => state.filters);
 
     const dispatch = useDispatch();
     const {request} = useHttp();
 
-    useEffect(() => {
-        request('http://localhost:3001/filters')
-            .then(data => setFilters(data));
-    }, []);
+    // useEffect(() => {
+    //     request('http://localhost:3001/filters')
+    //         .then(data => dispatch(setFilters(data)));
+    // }, []);
 
     const renderFilterOptions = () => {
         const entries = Object.entries(filters);
         return entries.map((item) => {
             const isAll = () => item[0] === 'all';
-            return <option value={!isAll() ? item[0] : null}>{isAll() ? 'Я владею элементом...' : item[1]}</option>
+            return <option key={item[0]} value={!isAll() ? item[0] : null}>{isAll() ? 'Я владею элементом...' : item[1]}</option>
         });
     }
 

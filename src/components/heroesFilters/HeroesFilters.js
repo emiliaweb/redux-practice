@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useHttp } from "../../hooks/http.hook";
+import { setFilters, setActiveFilter } from "../../actions";
 
 // Задача для этого компонента:
 // Фильтры должны формироваться на основании загруженных данных
@@ -11,15 +13,16 @@ import { useHttp } from "../../hooks/http.hook";
 // Представьте, что вы попросили бэкенд-разработчика об этом
 
 const HeroesFilters = () => {
-    const [filters, setFilters] = useState({});
+    const {filters, activeFilter} = useSelector(state => state);
+    const dispatch = useDispatch();
     const {request} = useHttp();
 
     useEffect(() => {
         request('http://localhost:3001/filters')
-            .then(data => setFilters(data));
+            .then(data => dispatch(setFilters(data)));
     }, []);
 
-    const setClassNames = (key) => {
+    const setClassNames = (key, activeFilter) => {
         let classes = '';
         const baseClass = 'btn';
             switch (key) {
@@ -39,15 +42,25 @@ const HeroesFilters = () => {
                     classes = classNames(baseClass, 'btn-outline-dark');
                     break;
             }
+        if (key === activeFilter) {
+            classes = classNames(classes, 'active');
+        }
         return classes;
+    }
+
+    const onClick = (data) => {
+        dispatch(setActiveFilter(data));
     }
 
     const renderFilterOptions = () => {
         const entries = Object.entries(filters);
         return entries.map((item) => {
-            let classes = setClassNames(item[0]);
+            let classes = setClassNames(item[0], activeFilter);
         
-            return <button className={classes} key={item[0]}>{item[1]}</button>
+            return <button 
+                    onClick={() => onClick(item[0])}
+                    className={classes} 
+                    key={item[0]}>{item[1]}</button>
         });
     }
     return (
