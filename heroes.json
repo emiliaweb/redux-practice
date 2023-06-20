@@ -20,15 +20,9 @@
     },
     {
       "name": "Wind",
-      "description": "Nothing useful either",
+      "description": "dispatch();",
       "element": "wind",
-      "id": "f21667"
-    },
-    {
-      "name": "Hello",
-      "description": "Hello World",
-      "element": "water",
-      "id": "3f80e0"
+      "id": "ff19e4"
     }
   ],
   "filters": {

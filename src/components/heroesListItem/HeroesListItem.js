@@ -4,10 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { heroesFetching, heroesFetched, heroesFetchingError, heroesDeleted } from '../../actions';
 import { useHttp } from "../../hooks/http.hook";
 
-const HeroesListItem = ({name, description, element, id}) => {
-    const {heroes} = useSelector(state => state);
-    const dispatch = useDispatch();
-    const {request} = useHttp();
+const HeroesListItem = ({name, description, element, id, onDelete}) => {
 
     let elementClassName;
 
@@ -26,22 +23,6 @@ const HeroesListItem = ({name, description, element, id}) => {
             break;
         default:
             elementClassName = 'bg-warning bg-gradient';
-    }
-
-    const getHeroes = () => {
-        dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()));
-    }
-
-    const onDelete = (id) => {
-        const newHeroes = heroes.filter((hero) => hero.id !== id);
-        dispatch(heroesDeleted(newHeroes));
-        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
-            .then(() => {
-                getHeroes();
-            });
     }
 
     return (

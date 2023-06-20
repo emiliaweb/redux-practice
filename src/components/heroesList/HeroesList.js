@@ -1,8 +1,8 @@
 import {useHttp} from '../../hooks/http.hook';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { heroesFetching, heroesFetched, heroesFetchingError } from '../../actions';
+import { heroesFetching, heroesFetched, heroesFetchingError, heroesDeleted } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
@@ -26,11 +26,26 @@ const HeroesList = () => {
             .catch(() => dispatch(heroesFetchingError()));
     }, []);
 
-    if (heroesLoadingStatus === "loading") {
-        return <Spinner/>;
-    } else if (heroesLoadingStatus === "error") {
-        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
+    const getHeroes = () => {
+        dispatch(heroesFetching());
+        request("http://localhost:3001/heroes")
+            .then(data => dispatch(heroesFetched(data)))
+            .catch(() => dispatch(heroesFetchingError()));
     }
+
+    const onDelete = useCallback((id) => {
+        const newHeroes = heroes.filter((hero) => hero.id !== id);
+        request(`http://localhost:3001/heroes/${id}`, 'DELETE')
+            .then(() => {
+                dispatch(heroesDeleted(newHeroes));
+            })
+            .then(() => {
+                getHeroes();
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [request])
 
     const renderHeroesList = (arr) => {
         if (arr.length === 0) {
@@ -38,8 +53,14 @@ const HeroesList = () => {
         }
 
         return arr.map(({id, ...props}) => {
-            return <HeroesListItem key={id} id={id} {...props}/>
+            return <HeroesListItem onDelete={onDelete} key={id} id={id} {...props}/>
         });
+    }
+
+    if (heroesLoadingStatus === "loading") {
+        return <Spinner/>;
+    } else if (heroesLoadingStatus === "error") {
+        return <h5 className="text-center mt-5">Ошибка загрузки</h5>
     }
 
     const filterElements = (elems, filter) => {
