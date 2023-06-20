@@ -33,8 +33,20 @@ export const heroesPosted = (heroes) => {
 
 export const setFilters = (filters) => {
     return {
-        type: 'SET_FILTERS',
+        type: 'FILTERS_FETCHED',
         payload: filters
+    }
+}
+
+export const filtersFetching = () => {
+    return {
+        type: 'FILTERS_FETCHING'
+    }
+}
+
+export const filtersFetchingError = () => {
+    return {
+        type: 'FILTERS_FETCHING'
     }
 }
 

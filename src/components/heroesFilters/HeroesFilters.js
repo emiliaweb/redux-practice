@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useHttp } from "../../hooks/http.hook";
-import { setFilters, setActiveFilter } from "../../actions";
+import { setFilters, setActiveFilter, filtersFetching, filtersFetchingError } from "../../actions";
 
 // Задача для этого компонента:
 // Фильтры должны формироваться на основании загруженных данных
@@ -13,13 +13,18 @@ import { setFilters, setActiveFilter } from "../../actions";
 // Представьте, что вы попросили бэкенд-разработчика об этом
 
 const HeroesFilters = () => {
-    const {filters, activeFilter} = useSelector(state => state);
+    const {filters, activeFilter, filtersLoadingStatus} = useSelector(state => state);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
     useEffect(() => {
+        dispatch(filtersFetching());
         request('http://localhost:3001/filters')
-            .then(data => dispatch(setFilters(data)));
+            .then(data => dispatch(setFilters(data)))
+            .catch(err => {
+                console.log(err);
+                dispatch(filtersFetchingError());
+            });
     }, []);
 
     const setClassNames = (key, activeFilter) => {
@@ -63,12 +68,24 @@ const HeroesFilters = () => {
                     key={item[0]}>{item[1]}</button>
         });
     }
+
+    const renderContent = () => {
+        switch (filtersLoadingStatus) {
+            case 'loading':
+                return <div>Loading...</div>;
+            case 'error': 
+                return <div className="error-message">Something went wrong</div>;
+            case 'idle': 
+                return renderFilterOptions();
+        }
+    }
+
     return (
         <div className="card shadow-lg mt-4">
             <div className="card-body">
                 <p className="card-text">Отфильтруйте героев по элементам</p>
                 <div className="btn-group">
-                    {renderFilterOptions()}
+                    {renderContent()}
                 </div>
             </div>
         </div>
