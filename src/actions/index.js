@@ -24,10 +24,10 @@ export const heroesDeleted = (id) => {
     }
 }
 
-export const heroesPosted = (heroes) => {
+export const heroesPosted = (hero) => {
     return {
         type: 'HEROES_POSTED',
-        payload: heroes
+        payload: hero
     }
 }
 

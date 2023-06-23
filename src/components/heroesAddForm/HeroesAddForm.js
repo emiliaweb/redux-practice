@@ -61,11 +61,12 @@ const HeroesAddForm = () => {
         }
         request(`http://localhost:3001/heroes`, 'POST', JSON.stringify(newValues))
             .then((data) => {
+                // console.log(data);
                 dispatch(heroesPosted(data));
             })
             .then(() => {
                 resetForm();
-                getHeroes();
+                // getHeroes();
             })
             .catch(err => {
                 console.log(err);
