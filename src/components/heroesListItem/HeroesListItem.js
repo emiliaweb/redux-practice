@@ -1,9 +1,3 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
-import { heroesFetching, heroesFetched, heroesFetchingError, heroesDeleted } from '../../actions';
-import { useHttp } from "../../hooks/http.hook";
-
 const HeroesListItem = ({name, description, element, id, onDelete}) => {
 
     let elementClassName;

@@ -1,8 +1,9 @@
 import {useHttp} from '../../hooks/http.hook';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 
-import { heroesFetching, heroesFetched, heroesFetchingError, heroesDeleted } from '../../actions';
+import { fetchHeroes, heroesDeleted } from '../../actions';
 import HeroesListItem from "../heroesListItem/HeroesListItem";
 import Spinner from '../spinner/Spinner';
 
@@ -12,26 +13,31 @@ import Spinner from '../spinner/Spinner';
 // Удаление идет и с json файла при помощи метода DELETE
 
 const HeroesList = () => {
-    const heroes = useSelector(state => state.heroes);
-    const filteredHeroes = useSelector(state => state.filteredHeroes);
-    const heroesLoadingStatus = useSelector(state => state.heroesLoadingStatus);
-    const activeFilter = useSelector(state => state.activeFilter);
+    const filteredHeroesSelector = createSelector(
+        state => state.filters.activeFilter,
+        state => state.heroes.heroes,
+        (filter, heroes) => {
+            if (filter === 'all') {
+                return heroes;
+            } else {
+                return heroes.filter(item => item.element === filter);
+            }
+        }
+    )
+
+    const heroesLoadingStatus = useSelector(state => state.heroes.heroesLoadingStatus);
+
+    const filteredHeroes = useSelector(filteredHeroesSelector);
 
     const dispatch = useDispatch();
     const {request} = useHttp();
 
     useEffect(() => {
-        dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()));
+        dispatch(fetchHeroes(request));
     }, []);
 
     const getHeroes = () => {
-        dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()));
+        dispatch(fetchHeroes(request));
     }
 
     const onDelete = useCallback((id) => {

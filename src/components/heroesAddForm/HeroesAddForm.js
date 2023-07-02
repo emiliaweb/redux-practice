@@ -2,7 +2,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
-import { useEffect } from "react";
 
 import { heroesPosted, heroesFetched, heroesFetching, heroesFetchingError } from "../../actions";
 import { useHttp } from "../../hooks/http.hook";
@@ -29,7 +28,7 @@ const validationSchema = Yup.object({
 })
 
 const HeroesAddForm = () => {
-    const filters = useSelector(state => state.filters);
+    const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
 
     const dispatch = useDispatch();
     const {request} = useHttp();
@@ -41,10 +40,17 @@ const HeroesAddForm = () => {
 
     const renderFilterOptions = () => {
         const entries = Object.entries(filters);
-        return entries.map((item) => {
-            const isAll = () => item[0] === 'all';
-            return <option key={item[0]} value={!isAll() ? item[0] : null}>{isAll() ? 'Я владею элементом...' : item[1]}</option>
-        });
+        switch (filtersLoadingStatus) {
+            case 'loading':
+                return <option>Loading...</option>;
+            case 'error': 
+                return <option className="error-message">Something went wrong</option>;
+            case 'idle': 
+                return entries.map((item) => {
+                    const isAll = () => item[0] === 'all';
+                    return <option key={item[0]} value={!isAll() ? item[0] : null}>{isAll() ? 'Я владею элементом...' : item[1]}</option>
+                });
+        }
     }
 
     const getHeroes = () => {
@@ -61,15 +67,13 @@ const HeroesAddForm = () => {
         }
         request(`http://localhost:3001/heroes`, 'POST', JSON.stringify(newValues))
             .then((data) => {
-                // console.log(data);
                 dispatch(heroesPosted(data));
             })
             .then(() => {
                 resetForm();
-                // getHeroes();
             })
             .catch(err => {
-                console.log(err);
+                throw err;
             });
     }
     return (

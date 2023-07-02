@@ -5,15 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHttp } from "../../hooks/http.hook";
 import { setFilters, setActiveFilter, filtersFetching, filtersFetchingError } from "../../actions";
 
-// Задача для этого компонента:
-// Фильтры должны формироваться на основании загруженных данных
-// Фильтры должны отображать только нужных героев при выборе
-// Активный фильтр имеет класс active
-// Изменять json-файл для удобства МОЖНО!
-// Представьте, что вы попросили бэкенд-разработчика об этом
-
 const HeroesFilters = () => {
-    const {filters, activeFilter, filtersLoadingStatus} = useSelector(state => state);
+    const {filters, activeFilter, filtersLoadingStatus} = useSelector(state => state.filters);
     const dispatch = useDispatch();
     const {request} = useHttp();
 
@@ -21,10 +14,7 @@ const HeroesFilters = () => {
         dispatch(filtersFetching());
         request('http://localhost:3001/filters')
             .then(data => dispatch(setFilters(data)))
-            .catch(err => {
-                console.log(err);
-                dispatch(filtersFetchingError());
-            });
+            .catch(err => dispatch(filtersFetchingError()));
     }, []);
 
     const setClassNames = (key, activeFilter) => {
@@ -72,9 +62,9 @@ const HeroesFilters = () => {
     const renderContent = () => {
         switch (filtersLoadingStatus) {
             case 'loading':
-                return <div>Loading...</div>;
+                return <option>Loading...</option>;
             case 'error': 
-                return <div className="error-message">Something went wrong</div>;
+                return <option className="error-message">Something went wrong</option>;
             case 'idle': 
                 return renderFilterOptions();
         }
