@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useHttp } from "../../hooks/http.hook";
-import { setFilters, setActiveFilter, filtersFetching, filtersFetchingError } from "../../actions";
+import { setActiveFilter, fetchFilters } from "../../actions";
 
 const HeroesFilters = () => {
     const {filters, activeFilter, filtersLoadingStatus} = useSelector(state => state.filters);
@@ -11,10 +11,7 @@ const HeroesFilters = () => {
     const {request} = useHttp();
 
     useEffect(() => {
-        dispatch(filtersFetching());
-        request('http://localhost:3001/filters')
-            .then(data => dispatch(setFilters(data)))
-            .catch(err => dispatch(filtersFetchingError()));
+        dispatch(fetchFilters(request));
     }, []);
 
     const setClassNames = (key, activeFilter) => {
