@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import heroes from '../reducers/heroes';
-import filters from '../reducers/filters';
+// import heroes from '../reducers/heroes';
+import heroes from '../components/heroesList/heroesSlice';
+import filters from '../components/heroesFilters/filtersSlice';
 
 // в этом способе store хранит в себе только getState и dispatch 
 // {dispatch, getState} вместо store 

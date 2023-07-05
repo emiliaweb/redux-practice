@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 
-import { heroesPosted, heroesFetched, heroesFetching, heroesFetchingError } from "../../actions";
+import { heroesPosted, heroesFetched, heroesFetching, heroesFetchingError } from "../heroesList/heroesSlice";
 import { useHttp } from "../../hooks/http.hook";
 
 // Задача для этого компонента:
@@ -51,13 +51,6 @@ const HeroesAddForm = () => {
                     return <option key={item[0]} value={!isAll() ? item[0] : null}>{isAll() ? 'Я владею элементом...' : item[1]}</option>
                 });
         }
-    }
-
-    const getHeroes = () => {
-        dispatch(heroesFetching());
-        request("http://localhost:3001/heroes")
-            .then(data => dispatch(heroesFetched(data)))
-            .catch(() => dispatch(heroesFetchingError()));
     }
 
     const onSubmit = (values, {resetForm}) => {
