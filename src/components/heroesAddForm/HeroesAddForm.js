@@ -33,11 +33,6 @@ const HeroesAddForm = () => {
     const dispatch = useDispatch();
     const {request} = useHttp();
 
-    // useEffect(() => {
-    //     request('http://localhost:3001/filters')
-    //         .then(data => dispatch(setFilters(data)));
-    // }, []);
-
     const renderFilterOptions = () => {
         const entries = Object.entries(filters);
         switch (filtersLoadingStatus) {
