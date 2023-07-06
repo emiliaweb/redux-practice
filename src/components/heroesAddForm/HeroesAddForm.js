@@ -3,18 +3,10 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from 'uuid';
 
-import { heroesPosted, heroesFetched, heroesFetching, heroesFetchingError } from "../heroesList/heroesSlice";
+import { heroesPosted } from "../heroesList/heroesSlice";
 import { useHttp } from "../../hooks/http.hook";
-
-// Задача для этого компонента:
-// Реализовать создание нового героя с введенными данными. Он должен попадать
-// в общее состояние и отображаться в списке + фильтроваться
-// Уникальный идентификатор персонажа можно сгенерировать через uiid
-// Усложненная задача:
-// Персонаж создается и в файле json при помощи метода POST
-// Дополнительно:
-// Элементы <option></option> желательно сформировать на базе
-// данных из фильтров
+import store from '../../store';
+import { selectAll } from "../heroesFilters/filtersSlice";
 
 const validationSchema = Yup.object({
     name: Yup.string()
@@ -28,22 +20,22 @@ const validationSchema = Yup.object({
 })
 
 const HeroesAddForm = () => {
-    const {filters, filtersLoadingStatus} = useSelector(state => state.filters);
+    const {filtersLoadingStatus} = useSelector(state => state.filters);
+    const filters = selectAll(store.getState());
 
     const dispatch = useDispatch();
     const {request} = useHttp();
 
     const renderFilterOptions = () => {
-        const entries = Object.entries(filters);
         switch (filtersLoadingStatus) {
             case 'loading':
                 return <option>Loading...</option>;
             case 'error': 
                 return <option className="error-message">Something went wrong</option>;
             case 'idle': 
-                return entries.map((item) => {
-                    const isAll = () => item[0] === 'all';
-                    return <option key={item[0]} value={!isAll() ? item[0] : null}>{isAll() ? 'Я владею элементом...' : item[1]}</option>
+                return filters.map((item) => {
+                    const isAll = () => item.name === 'all';
+                    return <option key={item.name} value={!isAll() ? item.name : null}>{isAll() ? 'Я владею элементом...' : item.label}</option>
                 });
         }
     }

@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setActiveFilter, fetchFilters } from "./filtersSlice";
+import { setActiveFilter, fetchFilters, selectAll } from "./filtersSlice";
+import store from '../../store';
 
 const HeroesFilters = () => {
-    const {filters, activeFilter, filtersLoadingStatus} = useSelector(state => state.filters);
+    const {activeFilter, filtersLoadingStatus} = useSelector(state => state.filters);
+    const filters = selectAll(store.getState());
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,13 +46,13 @@ const HeroesFilters = () => {
 
     const renderFilterOptions = () => {
         const entries = Object.entries(filters);
-        return entries.map((item) => {
-            let classes = setClassNames(item[0], activeFilter);
+        return filters.map((item) => {
+            let classes = setClassNames(item.name, activeFilter);
         
             return <button 
-                    onClick={() => onClick(item[0])}
+                    onClick={() => onClick(item.name)}
                     className={classes} 
-                    key={item[0]}>{item[1]}</button>
+                    key={item.id}>{item.label}</button>
         });
     }
 

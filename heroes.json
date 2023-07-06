@@ -7,12 +7,6 @@
       "element": "earth"
     },
     {
-      "name": "Emilia",
-      "description": "A lot of things",
-      "element": "fire",
-      "id": 4
-    },
-    {
       "name": "Water",
       "description": "Nothing useful",
       "element": "water",
@@ -26,22 +20,36 @@
     },
     {
       "name": "Emilia",
-      "description": "ddddddddddddd",
-      "element": "water",
-      "id": "09c720"
-    },
-    {
-      "name": "sss",
-      "description": "ddddssssss",
+      "description": "A lot of things",
       "element": "fire",
-      "id": "af28a6"
+      "id": "28db6f"
     }
   ],
-  "filters": {
-    "all": "Все",
-    "fire": "Огонь",
-    "water": "Вода",
-    "wind": "Ветер",
-    "earth": "Земля"
-  }
+  "filters": [
+    {
+      "id": "all",
+      "name": "all",
+      "label": "Все"
+    },
+    {
+      "id": "fire",
+      "name": "fire",
+      "label": "Огонь"
+    },
+    {
+      "id": "water",
+      "name": "water",
+      "label": "Вода"
+    },
+    {
+      "id": "wind",
+      "name": "wind",
+      "label": "Ветер"
+    },
+    {
+      "id": "earth",
+      "name": "earth",
+      "label": "Земля"
+    }
+  ]
 }
